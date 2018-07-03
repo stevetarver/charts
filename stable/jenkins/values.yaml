@@ -1,6 +1,6 @@
 ---
 #
-# All values should be defined in the deploy script (except minikube)
+# All values should be defined in the deploy script
 #
 
 # We dedicate a single node for Jenkins, in the dev namespace
