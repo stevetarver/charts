@@ -1,0 +1,33 @@
+---
+#
+# All values should be defined in the deploy script (except minikube)
+#
+
+# We dedicate a single node for Jenkins, in the dev namespace
+namespace: dev
+# releaseName uniquely identifies this jenkins heritage
+# A convenience for: {{ .Chart.Name }}-{{ .Values.releaseId }}-{{ .Values.location }}
+releaseName: 'MUST-BE-DEFINED_DURING-INSTALL'
+
+# One of: jenkins, jenkins-next, jenkins-last including an appropriate
+# domain: t3dev.dom, t3ppe.dom, t3n.dom
+ingress:
+  host: 'MUST-BE-DEFINED_DURING-INSTALL'
+
+service:
+  # Used to stall container entrypoint script: no jenkins initialization will start
+  # until after this many seconds. This is used to provide a pause after the ceph
+  # volume is created to allow seeding the jenkins_home with data from the previous
+  # version.
+  initialStartDelay: 0
+  image:
+    # The fully qualified name of the Jenkins image. Only the version tag should change
+    # e.g. portr.ctnr.ctl.io/clc-control-infra/jenkins:2.107.1-r0
+    nameTag: 'MUST-BE-DEFINED_DURING-INSTALL'
+
+
+# minikube (local testing) support
+minikube:
+  # use --set minikube.enabled=true during minikube helm install
+  enabled: false
+  nodePort: 30091

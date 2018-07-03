@@ -1,0 +1,17 @@
+---
+{{- if eq .Values.minikube.enabled false }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Values.releaseName }}
+  namespace: {{ .Values.namespace }}
+spec:
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ .Values.releaseName }}
+          servicePort: 8080
+{{- end }}
