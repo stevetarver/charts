@@ -2,11 +2,11 @@ apiVersion: v1
 entries:
   jenkins:
   - apiVersion: v1
-    created: 2018-07-03T11:46:08.677440952-06:00
+    created: 2018-07-09T15:04:34.354724698-06:00
     description: A custom Helm chart for Jenkins
-    digest: 41f06f016b81704968513cfbc2d67bb7754faf0ccd0255bc14260aa78e959352
+    digest: b85236f6a3e0a3f78831ba687469ebbe8e03c07227f060b30aeb03c2fa9b4b4e
     name: jenkins
     urls:
     - https://stevetarver.github.io/charts/jenkins-1.0.0.tgz
     version: 1.0.0
-generated: 2018-07-03T11:46:08.674960588-06:00
+generated: 2018-07-09T15:04:34.353919765-06:00
