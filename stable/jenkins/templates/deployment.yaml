@@ -37,6 +37,9 @@ spec:
         env:
         - name: INITIAL_START_DELAY
           value: "{{ .Values.service.initialStartDelay }}"
+        # Minikube is constrained by laptop resources - can cause
+        # Jenkins reschedules that destroy our config.
+        {{- if eq .Values.minikube.enabled false }}
         livenessProbe:
           httpGet:
             path: /login
@@ -51,6 +54,7 @@ spec:
           initialDelaySeconds: 150
           timeoutSeconds: 5
           failureThreshold: 12
+        {{- end }}
         volumeMounts:
         - name: dockersock
           mountPath: /var/run/docker.sock
