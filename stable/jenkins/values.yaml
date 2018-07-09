@@ -1,13 +1,6 @@
----
 #
 # All values should be defined in the deploy script
 #
-
-# We dedicate a single node for Jenkins, in the dev namespace
-namespace: dev
-# releaseName uniquely identifies this jenkins heritage
-# A convenience for: {{ .Chart.Name }}-{{ .Values.releaseId }}-{{ .Values.location }}
-releaseName: 'MUST-BE-DEFINED_DURING-INSTALL'
 
 # One of: jenkins, jenkins-next, jenkins-last including an appropriate
 # domain: t3dev.dom, t3ppe.dom, t3n.dom
@@ -22,8 +15,17 @@ service:
   initialStartDelay: 0
   image:
     # The fully qualified name of the Jenkins image. Only the version tag should change
-    # e.g. portr.ctnr.ctl.io/clc-control-infra/jenkins:2.107.1-r0
+    # e.g. stevetarver/jenkins:2.107.1-r0
     nameTag: 'MUST-BE-DEFINED_DURING-INSTALL'
+
+
+## Install Default RBAC roles and bindings
+rbac:
+  serviceAccountName: tiller
+  # RBAC api version (currently either v1beta1 or v1alpha1)
+  apiVersion: v1beta1
+  # Cluster role reference
+  roleRef: cluster-admin
 
 
 # minikube (local testing) support

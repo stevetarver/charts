@@ -1,3 +1,5 @@
+**Deprecated** See the official [Jenkins chart](https://github.com/kubernetes/charts/tree/master/stable/jenkins). This effort needs to be migrated there.
+
 ## Jenkins upgrades
 
 Our Jenkins upgrade process has the following goals:

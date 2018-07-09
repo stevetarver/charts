@@ -89,7 +89,7 @@ MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
         exit 1
     fi
 
-    IMAGE_NAMETAG='stevetarver/jenkins:2.107.2-r0'
+    IMAGE_NAMETAG='stevetarver/jenkins:2.121.1-r0'
     NAMESPACE='dev'
     RELEASE_NAME="jenkins-${RELEASE_ID}"
 
@@ -107,7 +107,6 @@ MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
     helm upgrade --install --wait                               \
         --namespace=${NAMESPACE}                                \
-        --set releaseName=${RELEASE_NAME}                       \
         --set service.initialStartDelay=${INITIAL_START_DELAY}  \
         --set service.image.nameTag=${IMAGE_NAMETAG}            \
         --set ingress.host=${INGRESS_HOST}.${DOMAIN}            \

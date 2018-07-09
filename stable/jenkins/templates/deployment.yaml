@@ -2,18 +2,17 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ .Values.releaseName }}
-  namespace: {{ .Values.namespace }}
+  name: {{ .Release.Name }}
   labels:
-    app: {{ .Values.releaseName }}
+    app: {{ .Release.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 spec:
   replicas: 1
   template:
     metadata:
-      name: {{ .Values.releaseName }}
-      namespace: {{ .Values.namespace }}
+      name: {{ .Release.Name }}
       labels:
-        app: {{ .Values.releaseName }}
+        app: {{ .Release.Name }}
     spec:
       #  [WARN  tini (122)] Tini is not running as PID 1 and isn't registered as a child subreaper.
       #  Zombie processes will not be re-parented to Tini, so zombie reaping won't work.
@@ -22,14 +21,14 @@ spec:
       #  Adding user 'jenkins' to group 'host_docker'
       #  touch: cannot touch '/var/jenkins_home/copy_reference_file.log': Permission denied
       #  Can not write to /var/jenkins_home/copy_reference_file.log. Wrong volume permissions?
-      # Mark says: You need to run the jenkins process as root. You can accomplish that through the pod spec.
-      # TODO: legacy item - we probably don't need to run as root with our image
+      # To fix this, we are running the jenkins process as root.
       securityContext:
         runAsUser: 0
+      serviceAccountName: {{ .Values.rbac.serviceAccountName }}
       nodeSelector:
         node-type: dev
       containers:
-      - name: {{ .Values.releaseName }}
+      - name: {{ .Release.Name }}
         image: {{ .Values.service.image.nameTag }}
         imagePullPolicy: Always
         ports:
@@ -38,10 +37,25 @@ spec:
         env:
         - name: INITIAL_START_DELAY
           value: "{{ .Values.service.initialStartDelay }}"
+        livenessProbe:
+          httpGet:
+            path: /login
+            port: 8080
+          initialDelaySeconds: 25
+          timeoutSeconds: 5
+          failureThreshold: 12
+        readinessProbe:
+          httpGet:
+            path: /login
+            port: 8080
+          initialDelaySeconds: 150
+          timeoutSeconds: 5
+          failureThreshold: 12
         volumeMounts:
         - name: dockersock
           mountPath: /var/run/docker.sock
         {{- if eq .Values.minikube.enabled false }}
+        # We expect an existing PVC unless running in minikube - then just use the docker volume
         - name: jenkinshome
           mountPath: "/var/jenkins_home"
         {{- end }}
